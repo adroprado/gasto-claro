@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./styles.css" />
+    <title>Gestor de Gastos</title>
+  </head>
+  <body>
+    <main class="container">
+      <!-- ENCABEZADO -->
+      <header class="header">
+        <h1>Gestor de Gastos Personales</h1>
+        <p>Controla tus finanzas de manera efectiva</p>
+      </header>
+      <!-- BARRA DE NAVEGACIÓN -->
+      <nav class="nav-menu">
+        <button class="btn-expenses is-active-btn">Gastos</button
+        ><button class="btn-statistics">Estadísticas</button>
+      </nav>
+      <!-- TABLA DE GASTOS -->
+      <section
+        id="expenses"
+        class="section-content is-active-btn is-active-sections"
+      >
+        <article class="card">
+          <h2>Agregar Nuevo Gasto</h2>
+          <p class="success-message">Gasto agregado correctamente</p>
+          <form id="form-expenses" class="form" autocomplete="off">
+            <div class="form-grid">
+              <div class="form-field">
+                <label for="">Nombre del gasto</label>
+                <input
+                  class="expense-name"
+                  type="text"
+                  name="expense-name"
+                  placeholder="Nombre de gasto"
+                  pattern="^[A-Za-zÑñÁáÉéÍíÓóÚúÜü0-9\s]{3,}$"
+                  required
+                />
+                <span class="error-message"
+                  >El nombre debe tener al menos 3 caracteres</span
+                >
+              </div>
+              <div class="form-field">
+                <label>Monto $</label>
+                <input
+                  class="purchase-amount"
+                  type="text"
+                  name="purchase-amount"
+                  placeholder="Monto $"
+                  pattern="^[0-9]*[1-9][0-9]*(\.[0-9]+)?$"
+                  required
+                />
+                <span class="error-message"
+                  >El monto debe ser mayor a cero (0).</span
+                >
+              </div>
+            </div>
+            <input class="btn-add" type="submit" value="+ Agregar Gasto" />
+            <input type="hidden" name="id" />
+          </form>
+        </article>
+
+        <!-- TARJETA INFORMACIÓN DE GASTOS -->
+        <article class="card complete-information">
+          <div class="information-card">
+            <div>
+              <p class="information-text">Total de Gastos</p>
+              <p class="amount-information">0</p>
+            </div>
+            <div>
+              <p class="information-text">Registros</p>
+              <p class="record-information">0</p>
+            </div>
+          </div>
+        </article>
+        <!-- BUSCADOR DE GASTOS -->
+        <article class="card">
+          <div class="search-field">
+            <span class="search-icon">🔍</span>
+            <input id="search" type="text" placeholder="Buscar gasto..." />
+          </div>
+        </article>
+        <!-- LISTA DE GASTOS -->
+        <article class="card">
+          <h2>Lista de Gastos</h2>
+          <div class="list-expenses">
+            <div class="empty-state">
+              <p>No hay gastos registrados</p>
+            </div>
+            <div class="item-container"></div>
+          </div>
+        </article>
+      </section>
+      <!-- TABLA DE ESTADÍSTICAS -->
+      <section id="statistics" class="section-content">
+        <article class="card">
+          <h2>Gastos Mensuales</h2>
+          <!-- Lógica -->
+          <div class="statistics-grid">
+            <div class="statistics-card statistics-blue">
+              <p class="statistics-text">Total General</p>
+              <p id="grand-total" class="statistics-value">$0.00</p>
+            </div>
+            <div class="statistics-card statistics-green">
+              <p class="statistics-text">Promedio Mensual</p>
+              <p id="monthly-average" class="statistics-value">$0.00</p>
+            </div>
+            <div class="statistics-card statistics-purple">
+              <p class="statistics-text">Total Gastos</p>
+              <p id="total-expenses" class="statistics-value">$0.00</p>
+            </div>
+          </div>
+          <!-- Lógica -->
+          <canvas class="canvas-graphic"></canvas>
+          <div class="empty-state statistics-message">
+            <p>No hay datos para mostrar</p>
+          </div>
+        </article>
+      </section>
+    </main>
+    <!-- PLANTILLA RENDERIZAR EN EL DOM -->
+    <template class="template">
+      <div class="item-expense">
+        <div class="expense-name">
+          <span class="mobile-label">Nombre:</span>
+          <span class="text-name"></span>
+        </div>
+        <div class="expense-amount">
+          <span class="mobile-label">Monto:</span>
+          <span class="text-expense"></span>
+        </div>
+        <div class="expense-date">
+          <span class="mobile-label">Fecha:</span>
+          <span class="text-date"></span>
+        </div>
+        <div class="spending-action-btns">
+          <input class="btn-edit" type="button" value="Editar" />
+          <input class="btn-delete" type="button" value="Eliminar" />
+        </div>
+      </div>
+    </template>
+    <!-- MODAL EDITAR -->
+    <aside id="modal-edit" class="modal">
+      <div class="modal-content">
+        <header class="modal-header">
+          <h2>Editar Gasto</h2>
+        </header>
+        <section class="modal-body">
+          <div class="form-field">
+            <label for="">Nombre del gasto</label>
+            <input
+              class="expense-name"
+              type="text"
+              name="expense-name"
+              placeholder="Nombre de gasto"
+              pattern="^[A-Za-zÑñÁáÉéÍíÓóÚúÜü0-9\s]{3,}$"
+              required
+            />
+            <span class="error-message"
+              >El nombre debe tener al menos 3 caracteres</span
+            >
+          </div>
+          <div class="form-field">
+            <label>Monto $</label>
+            <input
+              class="purchase-amount"
+              type="text"
+              name="purchase-amount"
+              placeholder="Monto $"
+              pattern="^[0-9]*[1-9][0-9]*(\.[0-9]+)?$"
+              required
+            />
+            <span class="error-message"
+              >El monto debe ser mayor a cero (0).</span
+            >
+          </div>
+        </section>
+        <footer class="modal-footer">
+          <button class="btn-save">Guardar Cambios</button>
+          <input type="hidden" name="id" />
+          <button class="btn-cancel">Cancelar</button>
+        </footer>
+      </div>
+    </aside>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="./main.js"></script>
+  </body>
+</html>
