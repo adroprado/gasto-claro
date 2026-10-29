@@ -1,33 +1,24 @@
 import menuNav from './js/menu.js';
 import formValidations from './js/form-validations.js';
 import { saveExpenses, loadExpenses } from './js/storage.js';
+import {
+  successMessageView,
+  expensesView,
+  editFormView,
+  statisticsInfoCardView,
+} from './js/expense-view.js';
 
 // --- VARIABLES QUE ALMACENAN ELEMENTOS DEL DOM ---
 const $form = document.getElementById('form-expenses'),
-  $message = document.querySelector('.success-message'),
-  $template = document.querySelector('.template').content,
-  $fragment = document.createDocumentFragment(),
-  $itemsContainer = document.querySelector('.item-container'),
-  $emptyMessage = document.querySelector('.empty-state'),
-  $totalExpenses = document.querySelector('.amount-information'),
-  $totalRecords = document.querySelector('.record-information'),
   $search = document.getElementById('search'),
   $modalEdit = document.getElementById('modal-edit'),
   $modalExpenseName = $modalEdit.querySelector('.expense-name'),
   $modalPurchaseAmount = $modalEdit.querySelector('.purchase-amount'),
-  $graph = document.querySelector('.canvas-graphic'),
-  $graphEmptyState = document.querySelector('.empty-state'),
-  $grandTotalStatistics = document.getElementById('grand-total'),
-  $monthlyAverageStatistics = document.getElementById('monthly-average'),
-  $totalExpensesStatistics = document.getElementById('total-expenses');
+  $graph = document.querySelector('.canvas-graphic');
 
 // --- SELECTORES ---
 const EXPENSE_NAME = '.expense-name',
   PURCHASE_AMOUNT = '.purchase-amount',
-  ITEM_NAME = '.text-name',
-  ITEM_EXPENSE = '.text-expense',
-  ITEM_DATE = '.text-date',
-  ITEM_BTN_EDIT = '.btn-edit',
   ITEM_BTN_DELETE = '.btn-delete',
   ITEM_MODAL_NAME = '.expense-name',
   ITEM_MODAL_EXPENSE = '.purchase-amount',
@@ -36,31 +27,17 @@ const EXPENSE_NAME = '.expense-name',
   MODAL_BTN_CANCEL = '.btn-cancel';
 
 // --- SELECTORES DE ESTILOS ---
-const ACTIVATE_SUCCESS_MESSAGE = 'show-success',
-  ACTIVATE_HIDDEN_MESSAGE = 'hidden-message',
-  ACTIVATE_SHOW_MODAL = 'show-modal',
-  ACTIVATE_GRAPH = 'show-graph',
-  ACTIVATE_STATISTICS_MESSAGE = 'statistics-message';
+const ACTIVATE_SHOW_MODAL = 'show-modal';
 
 // --- VARIABLE GLOBAL ---
-let currencySettings = { style: 'currency', currency: 'MXN' },
+export let currencySettings = { style: 'currency', currency: 'MXN' },
   currencyFormatting = new Intl.NumberFormat('es-MX', currencySettings);
 
 let myGraphicsCard;
 
-let dbExpenses = [];
+export let dbExpenses = [];
 
 dbExpenses = loadExpenses(); // Los datos extraidos de localStorage, se los pasamos a nuestra database.
-
-const successMessage = () => {
-  $form.reset();
-  let timer;
-  $message.classList.toggle(ACTIVATE_SUCCESS_MESSAGE);
-  timer = setTimeout(() => {
-    $message.classList.toggle(ACTIVATE_SUCCESS_MESSAGE);
-  }, 1500);
-  setTimeout(timer);
-};
 
 const createExpense = () => {
   const newExpense = {
@@ -71,40 +48,6 @@ const createExpense = () => {
   dbExpenses = [...dbExpenses, newExpense];
   saveExpenses(dbExpenses);
   $form.reset();
-};
-
-const listOfExpenses = (dataToDisplay = dbExpenses) => {
-  $itemsContainer.innerHTML = '';
-  if (dataToDisplay.length === 0) {
-    $emptyMessage.classList.remove(ACTIVATE_HIDDEN_MESSAGE);
-    $totalExpenses.textContent = currencyFormatting.format(0);
-    $totalRecords.textContent = 0;
-  } else {
-    $emptyMessage.classList.add(ACTIVATE_HIDDEN_MESSAGE);
-    dataToDisplay.forEach((expense) => {
-      let $cloneRow = document.importNode($template, true);
-      $cloneRow.querySelector(ITEM_NAME).textContent = expense.expenseName;
-      $cloneRow.querySelector(ITEM_EXPENSE).textContent =
-        currencyFormatting.format(expense.purchaseAmount);
-      $cloneRow.querySelector(ITEM_DATE).textContent =
-        new Date().toLocaleDateString();
-      $cloneRow.querySelector(ITEM_BTN_EDIT).dataset.id = expense.id;
-      $cloneRow.querySelector(ITEM_BTN_DELETE).dataset.id = expense.id;
-
-      $fragment.appendChild($cloneRow);
-    });
-    $itemsContainer.appendChild($fragment);
-
-    // Cálculo total
-    const totalSum = dataToDisplay.reduce((accumulator, expense) => {
-      return (accumulator += parseFloat(expense.purchaseAmount));
-    }, 0);
-    $totalExpenses.textContent = currencyFormatting.format(totalSum);
-
-    // Cálculo registros
-    const totalRecords = dataToDisplay.length;
-    $totalRecords.textContent = totalRecords;
-  }
 };
 
 // Filtrado de busqueda
@@ -118,24 +61,7 @@ const searchExpense = (e) => {
   if (e.target === $search) {
     const searchTerm = $search.value.toLowerCase(); // el gasto que busca el usuario
     const filterFound = filterSearch(searchTerm); // se almacena en una variable el gasto filtrado (encontrado)
-    listOfExpenses(filterFound); // se pasa cómo valor del parámetro "dataToDisplay" para usarse, si es que se manda una busqueda, de lo contrario, la función "listOfExpenses" usa, "dbExpenses", si el usuario no realiza una busqueda.
-  }
-};
-
-// Editar gasto
-const editExpense = (e) => {
-  if (e.target.matches(ITEM_BTN_EDIT)) {
-    $modalEdit.classList.add(ACTIVATE_SHOW_MODAL);
-    const ID = Number(e.target.dataset.id);
-
-    dbExpenses.find((expense) => {
-      if (expense.id === ID) {
-        $modalEdit.querySelector(ITEM_MODAL_NAME).value = expense.expenseName;
-        $modalEdit.querySelector(ITEM_MODAL_EXPENSE).value =
-          expense.purchaseAmount;
-        $modalEdit.querySelector(ITEM_MODAL_ID).value = expense.id;
-      }
-    });
+    expensesView(filterFound); // se pasa cómo valor del parámetro "dataToDisplay" para usarse, si es que se manda una busqueda, de lo contrario, la función "listOfExpenses" usa, "dbExpenses", si el usuario no realiza una busqueda.
   }
 };
 
@@ -154,9 +80,9 @@ const saveChanges = (e) => {
         : expense;
     });
 
-    listOfExpenses();
+    expensesView();
     saveExpenses(dbExpenses);
-    statisticsCards();
+    statisticsInfoCardView();
     graph();
     $modalEdit.querySelector(ITEM_MODAL_NAME).value = '';
     $modalEdit.querySelector(ITEM_MODAL_EXPENSE).value = '';
@@ -172,39 +98,9 @@ const deleteExpense = (e) => {
     dbExpenses = dbExpenses.filter((expense) => expense.id !== ID);
     saveExpenses(dbExpenses);
   }
-  listOfExpenses();
-  statisticsCards();
+  expensesView();
+  statisticsInfoCardView();
   graph();
-};
-
-// Estadística tarjetas
-const statisticsCards = () => {
-  if (dbExpenses.length === 0) {
-    $graph.classList.add(ACTIVATE_GRAPH);
-    $graphEmptyState.classList.remove(ACTIVATE_STATISTICS_MESSAGE);
-    // Reset tarjeta de información, si, no hay gastos
-    $totalExpensesStatistics.textContent = currencyFormatting.format(0);
-    $monthlyAverageStatistics.textContent = 0;
-    $grandTotalStatistics.textContent = currencyFormatting.format(0);
-  } else {
-    $graph.classList.remove(ACTIVATE_GRAPH);
-    $graphEmptyState.classList.add(ACTIVATE_STATISTICS_MESSAGE);
-
-    // Cálculo total
-    const totalSum = dbExpenses.reduce((accumulator, expense) => {
-      return (accumulator += parseFloat(expense.purchaseAmount));
-    }, 0);
-    $grandTotalStatistics.textContent = currencyFormatting.format(totalSum);
-
-    // Cálculo registros
-    const totalRecords = dbExpenses.length;
-    $totalExpensesStatistics.textContent = totalRecords;
-
-    // Cálculo promedio mensual
-    const monthlyAverage = totalSum / totalRecords || 0;
-    $monthlyAverageStatistics.textContent =
-      currencyFormatting.format(monthlyAverage);
-  }
 };
 
 //Cálculo mensual
@@ -296,9 +192,9 @@ document.addEventListener('submit', (e) => {
   // Crear nuevo elemento "gasto"
   if (!ID) {
     createExpense();
-    successMessage();
-    listOfExpenses();
-    statisticsCards();
+    successMessageView();
+    expensesView();
+    statisticsInfoCardView();
     graph();
   }
 });
@@ -307,7 +203,7 @@ document.addEventListener('submit', (e) => {
 document.addEventListener('click', (e) => {
   menuNav(e);
 
-  editExpense(e);
+  editFormView(e);
   deleteExpense(e);
   if (e.target.matches(MODAL_BTN_CANCEL))
     $modalEdit.classList.remove(ACTIVATE_SHOW_MODAL);
@@ -320,6 +216,6 @@ document.addEventListener('keyup', (e) => {
   searchExpense(e);
 });
 
-(document.addEventListener('DOMContentLoaded', listOfExpenses()),
-  statisticsCards(),
+(document.addEventListener('DOMContentLoaded', expensesView()),
+  statisticsInfoCardView(),
   graph());
