@@ -1,4 +1,5 @@
 import menuNav from './js/menu.js';
+import formValidations from './js/form-validations.js';
 
 // --- VARIABLES QUE ALMACENAN ELEMENTOS DEL DOM ---
 const $form = document.getElementById('form-expenses'),
@@ -22,7 +23,6 @@ const $form = document.getElementById('form-expenses'),
 // --- SELECTORES ---
 const EXPENSE_NAME = '.expense-name',
   PURCHASE_AMOUNT = '.purchase-amount',
-  FIELD_SELECTOR = '.form-field [required]',
   ITEM_NAME = '.text-name',
   ITEM_EXPENSE = '.text-expense',
   ITEM_DATE = '.text-date',
@@ -36,7 +36,6 @@ const EXPENSE_NAME = '.expense-name',
 
 // --- SELECTORES DE ESTILOS ---
 const ACTIVATE_SUCCESS_MESSAGE = 'show-success',
-  ACTIVATE_ERROR_MESSAGE = 'show-error',
   ACTIVATE_HIDDEN_MESSAGE = 'hidden-message',
   ACTIVATE_SHOW_MODAL = 'show-modal',
   ACTIVATE_GRAPH = 'show-graph',
@@ -71,26 +70,6 @@ const successMessage = () => {
     $message.classList.toggle(ACTIVATE_SUCCESS_MESSAGE);
   }, 1500);
   setTimeout(timer);
-};
-
-// Validación formulario
-const errorMessage = (e) => {
-  if (e.target.matches(FIELD_SELECTOR)) {
-    let input = e.target; // Almacena el input en cuestion
-    let rulePattern = input.pattern; // Almacena el patron del input en cuestion
-
-    if (rulePattern) {
-      let regex = new RegExp(rulePattern);
-
-      if (!regex.exec(input.value)) {
-        input.classList.add(ACTIVATE_ERROR_MESSAGE);
-        input.nextElementSibling.classList.add(ACTIVATE_ERROR_MESSAGE);
-      } else {
-        input.classList.remove(ACTIVATE_ERROR_MESSAGE);
-        input.nextElementSibling.classList.remove(ACTIVATE_ERROR_MESSAGE);
-      }
-    }
-  }
 };
 
 const createExpense = () => {
@@ -347,7 +326,7 @@ document.addEventListener('click', (e) => {
 
 // Evento "keyup"
 document.addEventListener('keyup', (e) => {
-  errorMessage(e);
+  formValidations(e);
   searchExpense(e);
 });
 
