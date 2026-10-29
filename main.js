@@ -1,5 +1,6 @@
 import menuNav from './js/menu.js';
 import formValidations from './js/form-validations.js';
+import { saveExpenses, loadExpenses } from './js/storage.js';
 
 // --- VARIABLES QUE ALMACENAN ELEMENTOS DEL DOM ---
 const $form = document.getElementById('form-expenses'),
@@ -49,18 +50,7 @@ let myGraphicsCard;
 
 let dbExpenses = [];
 
-const saveExpensesLS = (data) => {
-  const ls = localStorage;
-  ls.setItem('expenses', JSON.stringify(data));
-};
-
-const loadExpense = () => {
-  const ls = localStorage;
-  let dataRecovered = JSON.parse(ls.getItem('expenses'));
-  return dataRecovered || [];
-};
-
-dbExpenses = loadExpense();
+dbExpenses = loadExpenses(); // Los datos extraidos de localStorage, se los pasamos a nuestra database.
 
 const successMessage = () => {
   $form.reset();
@@ -79,7 +69,7 @@ const createExpense = () => {
     purchaseAmount: $form.querySelector(PURCHASE_AMOUNT).value,
   };
   dbExpenses = [...dbExpenses, newExpense];
-  saveExpensesLS(dbExpenses);
+  saveExpenses(dbExpenses);
   $form.reset();
 };
 
@@ -165,7 +155,7 @@ const saveChanges = (e) => {
     });
 
     listOfExpenses();
-    saveExpensesLS(dbExpenses);
+    saveExpenses(dbExpenses);
     statisticsCards();
     graph();
     $modalEdit.querySelector(ITEM_MODAL_NAME).value = '';
@@ -180,7 +170,7 @@ const deleteExpense = (e) => {
   const ID = Number(e.target.dataset.id);
   if (e.target.matches(ITEM_BTN_DELETE)) {
     dbExpenses = dbExpenses.filter((expense) => expense.id !== ID);
-    saveExpensesLS(dbExpenses);
+    saveExpenses(dbExpenses);
   }
   listOfExpenses();
   statisticsCards();
