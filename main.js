@@ -1,9 +1,7 @@
+import menuNav from './js/menu.js';
+
 // --- VARIABLES QUE ALMACENAN ELEMENTOS DEL DOM ---
-const $btnExpenses = document.querySelector('.btn-expenses'),
-  $btnStatistics = document.querySelector('.btn-statistics'),
-  $expensesSection = document.getElementById('expenses'),
-  $statisticsSection = document.getElementById('statistics'),
-  $form = document.getElementById('form-expenses'),
+const $form = document.getElementById('form-expenses'),
   $message = document.querySelector('.success-message'),
   $template = document.querySelector('.template').content,
   $fragment = document.createDocumentFragment(),
@@ -37,9 +35,7 @@ const EXPENSE_NAME = '.expense-name',
   MODAL_BTN_CANCEL = '.btn-cancel';
 
 // --- SELECTORES DE ESTILOS ---
-const ACTIVATE_BTN_MENU = 'is-active-btn',
-  ACTIVATE_MENU_SECTIONS = 'is-active-sections',
-  ACTIVATE_SUCCESS_MESSAGE = 'show-success',
+const ACTIVATE_SUCCESS_MESSAGE = 'show-success',
   ACTIVATE_ERROR_MESSAGE = 'show-error',
   ACTIVATE_HIDDEN_MESSAGE = 'hidden-message',
   ACTIVATE_SHOW_MODAL = 'show-modal',
@@ -53,26 +49,6 @@ let currencySettings = { style: 'currency', currency: 'MXN' },
 let myGraphicsCard;
 
 let dbExpenses = [];
-
-const menuNav = (e) => {
-  if (e.target === $btnExpenses) {
-    // Estilos a btns
-    $btnExpenses.classList.add(ACTIVATE_BTN_MENU);
-    $btnStatistics.classList.remove(ACTIVATE_BTN_MENU);
-    // Estilos a secciones
-    $expensesSection.classList.add(ACTIVATE_MENU_SECTIONS);
-    $statisticsSection.classList.remove(ACTIVATE_MENU_SECTIONS);
-  }
-
-  if (e.target === $btnStatistics) {
-    // Estilos a btns
-    $btnStatistics.classList.add(ACTIVATE_BTN_MENU);
-    $btnExpenses.classList.remove(ACTIVATE_BTN_MENU);
-    // Estilos a secciones
-    $statisticsSection.classList.add(ACTIVATE_MENU_SECTIONS);
-    $expensesSection.classList.remove(ACTIVATE_MENU_SECTIONS);
-  }
-};
 
 const saveExpensesLS = (data) => {
   const ls = localStorage;
