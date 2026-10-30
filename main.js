@@ -1,9 +1,11 @@
 import menuNav from './js/menu.js';
 import {
+  $modalEdit,
   createExpense,
   saveChanges,
   deleteExpense,
   MODAL_BTN_CANCEL,
+  ACTIVATE_SHOW_MODAL,
 } from './js/expenses.js';
 import formValidations from './js/form-validations.js';
 import {

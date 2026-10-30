@@ -83,7 +83,9 @@ export {
   saveChanges,
   deleteExpense,
   $form,
+  $modalEdit,
   MODAL_BTN_CANCEL,
+  ACTIVATE_SHOW_MODAL,
   currencyFormatting,
   dbExpenses,
 };
