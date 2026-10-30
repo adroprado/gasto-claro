@@ -8,10 +8,10 @@ import {
   statisticsInfoCardView,
 } from './js/expense-view.js';
 import { graphView } from './js/statistics.js';
+import { searchExpense } from './js/searcher.js';
 
 // --- VARIABLES QUE ALMACENAN ELEMENTOS DEL DOM ---
 const $form = document.getElementById('form-expenses'),
-  $search = document.getElementById('search'),
   $modalEdit = document.getElementById('modal-edit'),
   $modalExpenseName = $modalEdit.querySelector('.expense-name'),
   $modalPurchaseAmount = $modalEdit.querySelector('.purchase-amount');
@@ -46,21 +46,6 @@ const createExpense = () => {
   dbExpenses = [...dbExpenses, newExpense];
   saveExpenses(dbExpenses);
   $form.reset();
-};
-
-// Filtrado de busqueda
-const filterSearch = (findingExpense) => {
-  return dbExpenses.filter((expense) =>
-    expense.expenseName.toLowerCase().includes(findingExpense),
-  );
-};
-// Buscador de gasto
-const searchExpense = (e) => {
-  if (e.target === $search) {
-    const searchTerm = $search.value.toLowerCase(); // el gasto que busca el usuario
-    const filterFound = filterSearch(searchTerm); // se almacena en una variable el gasto filtrado (encontrado)
-    expensesView(filterFound); // se pasa cómo valor del parámetro "dataToDisplay" para usarse, si es que se manda una busqueda, de lo contrario, la función "listOfExpenses" usa, "dbExpenses", si el usuario no realiza una busqueda.
-  }
 };
 
 // Guardar cambios de edición de gasto
