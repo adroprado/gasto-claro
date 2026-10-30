@@ -1,4 +1,4 @@
-import { dbExpenses } from '../main.js';
+import { dbExpenses } from './expenses.js';
 import { expensesView } from './expense-view.js';
 
 // --- VARIABLES QUE ALMACENAN ELEMENTOS DEL DOM ---

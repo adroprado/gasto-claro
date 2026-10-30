@@ -1,4 +1,4 @@
-import { dbExpenses, currencyFormatting } from '../main.js';
+import { dbExpenses, currencyFormatting } from './expenses.js';
 // --- VARIABLES QUE ALMACENAN ELEMENTOS DEL DOM ---
 const $graph = document.querySelector('.canvas-graphic');
 // --- VARIABLE GLOBAL ---

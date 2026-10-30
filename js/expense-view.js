@@ -1,8 +1,7 @@
-import { dbExpenses, currencyFormatting } from '../main.js';
+import { $form, dbExpenses, currencyFormatting } from './expenses.js';
 
 // --- VARIABLES QUE ALMACENAN ELEMENTOS DEL DOM ---
 const $message = document.querySelector('.success-message'),
-  $form = document.getElementById('form-expenses'),
   $template = document.querySelector('.template').content,
   $fragment = document.createDocumentFragment(),
   $itemsContainer = document.querySelector('.item-container'),
