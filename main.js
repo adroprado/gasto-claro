@@ -49,6 +49,8 @@ document.addEventListener('keyup', (e) => {
   searchExpense(e);
 });
 
-(document.addEventListener('DOMContentLoaded', expensesView()),
-  statisticsInfoCardView(),
-  graphView());
+document.addEventListener('DOMContentLoaded', () => {
+  expensesView();
+  statisticsInfoCardView();
+  graphView();
+});
