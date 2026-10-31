@@ -72,10 +72,10 @@ const deleteExpense = (e) => {
   if (e.target.matches(ITEM_BTN_DELETE)) {
     dbExpenses = dbExpenses.filter((expense) => expense.id !== ID);
     saveExpenses(dbExpenses);
+    statisticsInfoCardView();
+    graphView();
+    expensesView();
   }
-  expensesView();
-  statisticsInfoCardView();
-  graphView();
 };
 
 export {

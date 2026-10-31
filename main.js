@@ -36,7 +36,6 @@ document.addEventListener('submit', (e) => {
 // Evento "click"
 document.addEventListener('click', (e) => {
   menuNav(e);
-
   editFormView(e);
   deleteExpense(e);
   if (e.target.matches(MODAL_BTN_CANCEL))
