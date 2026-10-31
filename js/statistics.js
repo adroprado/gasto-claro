@@ -49,7 +49,7 @@ export function graphView() {
     myGraphicsCard = null;
   }
 
-  if (dbExpenses === 0) return;
+  if (dbExpenses.length === 0) return;
 
   const chartData = monthlyData();
 
