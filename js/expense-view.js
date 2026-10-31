@@ -34,12 +34,10 @@ const ACTIVATE_SUCCESS_MESSAGE = 'show-success',
 
 function successMessageView() {
   $form.reset();
-  let timer;
   $message.classList.toggle(ACTIVATE_SUCCESS_MESSAGE);
-  timer = setTimeout(() => {
+  setTimeout(() => {
     $message.classList.toggle(ACTIVATE_SUCCESS_MESSAGE);
   }, 1500);
-  setTimeout(timer);
 }
 
 function expensesView(dataToDisplay = dbExpenses) {
