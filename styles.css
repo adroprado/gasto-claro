@@ -248,12 +248,12 @@ body {
   display: none;
 }
 
-.empty-state {
+.empty-state-message {
   text-align: center;
   padding: 3rem 1rem;
 }
 
-.empty-state > p {
+.empty-state-message > p {
   color: #6b7280;
   font-size: 1.125rem;
 }
@@ -566,6 +566,16 @@ body {
 /* JS-DOM: mostrar gráfica */
 .show-graph {
   display: none;
+}
+
+.empty-state-graphic {
+  text-align: center;
+  padding: 3rem 1rem;
+}
+
+.empty-state-graphic > p {
+  color: #6b7280;
+  font-size: 1.125rem;
 }
 
 /* JS-DOM: mostrar mensaje si, no existe ningún elemento item (gasto) en Lista de Gastos */
