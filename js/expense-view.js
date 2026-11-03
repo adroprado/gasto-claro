@@ -1,4 +1,4 @@
-import { $form, dbExpenses, currencyFormatting } from './expenses.js';
+import { dbExpenses, currencyFormatting } from './expenses.js';
 
 // --- VARIABLES QUE ALMACENAN ELEMENTOS DEL DOM ---
 const $message = document.querySelector('.success-message'),
@@ -33,7 +33,6 @@ const ACTIVATE_SUCCESS_MESSAGE = 'show-success',
   ACTIVATE_STATISTICS_MESSAGE = 'statistics-message';
 
 function successMessageView() {
-  $form.reset();
   $message.classList.toggle(ACTIVATE_SUCCESS_MESSAGE);
   setTimeout(() => {
     $message.classList.toggle(ACTIVATE_SUCCESS_MESSAGE);
