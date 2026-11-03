@@ -1,6 +1,4 @@
 import { saveExpenses, loadExpenses } from './storage.js';
-import { expensesView, statisticsInfoCardView } from './expense-view.js';
-import { graphView } from './statistics.js';
 
 // --- VARIABLES QUE ALMACENAN ELEMENTOS DEL DOM ---
 const $form = document.getElementById('form-expenses'),
@@ -42,28 +40,24 @@ const createExpense = () => {
 
 // Guardar cambios de edición de gasto
 const saveChanges = (e) => {
-  if (e.target.matches(MODAL_BTN_SAVE)) {
-    const ID = Number($modalEdit.querySelector(ITEM_MODAL_ID).value);
+  const ID = Number($modalEdit.querySelector(ITEM_MODAL_ID).value);
 
-    dbExpenses = dbExpenses.map((expense) => {
-      return expense.id === ID
-        ? {
-            ...expense,
-            expenseName: $modalExpenseName.value,
-            purchaseAmount: $modalPurchaseAmount.value,
-          }
-        : expense;
-    });
+  dbExpenses = dbExpenses.map((expense) => {
+    return expense.id === ID
+      ? {
+          ...expense,
+          expenseName: $modalExpenseName.value,
+          purchaseAmount: $modalPurchaseAmount.value,
+        }
+      : expense;
+  });
 
-    expensesView();
-    saveExpenses(dbExpenses);
-    statisticsInfoCardView();
-    graphView();
-    $modalEdit.querySelector(ITEM_MODAL_NAME).value = '';
-    $modalEdit.querySelector(ITEM_MODAL_EXPENSE).value = '';
-    $modalEdit.querySelector('input[name="id"]').value = '';
-    $modalEdit.classList.remove(ACTIVATE_SHOW_MODAL);
-  }
+  saveExpenses(dbExpenses);
+
+  $modalEdit.querySelector(ITEM_MODAL_NAME).value = '';
+  $modalEdit.querySelector(ITEM_MODAL_EXPENSE).value = '';
+  $modalEdit.querySelector('input[name="id"]').value = '';
+  $modalEdit.classList.remove(ACTIVATE_SHOW_MODAL);
 };
 
 // Eliminar gasto
@@ -72,9 +66,6 @@ const deleteExpense = (e) => {
   if (e.target.matches(ITEM_BTN_DELETE)) {
     dbExpenses = dbExpenses.filter((expense) => expense.id !== ID);
     saveExpenses(dbExpenses);
-    statisticsInfoCardView();
-    graphView();
-    expensesView();
   }
 };
 
@@ -84,6 +75,8 @@ export {
   deleteExpense,
   $form,
   $modalEdit,
+  ITEM_BTN_DELETE,
+  MODAL_BTN_SAVE,
   MODAL_BTN_CANCEL,
   ACTIVATE_SHOW_MODAL,
   currencyFormatting,

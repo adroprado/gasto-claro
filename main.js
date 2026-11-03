@@ -4,6 +4,8 @@ import {
   createExpense,
   saveChanges,
   deleteExpense,
+  ITEM_BTN_DELETE,
+  MODAL_BTN_SAVE,
   MODAL_BTN_CANCEL,
   ACTIVATE_SHOW_MODAL,
 } from './js/expenses.js';
@@ -37,10 +39,23 @@ document.addEventListener('submit', (e) => {
 document.addEventListener('click', (e) => {
   menuNav(e);
   editFormView(e);
-  deleteExpense(e);
+
   if (e.target.matches(MODAL_BTN_CANCEL))
     $modalEdit.classList.remove(ACTIVATE_SHOW_MODAL);
-  saveChanges(e);
+
+  if (e.target.matches(MODAL_BTN_SAVE)) {
+    saveChanges(e);
+    expensesView();
+    statisticsInfoCardView();
+    graphView();
+  }
+
+  if (e.target.matches(ITEM_BTN_DELETE)) {
+    deleteExpense(e);
+    expensesView();
+    statisticsInfoCardView();
+    graphView();
+  }
 });
 
 // Evento "keyup"
@@ -49,6 +64,7 @@ document.addEventListener('keyup', (e) => {
   searchExpense(e);
 });
 
+// Evento DOMContentLoaded
 document.addEventListener('DOMContentLoaded', () => {
   expensesView();
   statisticsInfoCardView();
