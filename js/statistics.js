@@ -1,14 +1,17 @@
-import { dbExpenses, currencyFormatting } from './expenses.js';
 // --- VARIABLES QUE ALMACENAN ELEMENTOS DEL DOM ---
 const $graph = document.querySelector('.canvas-graphic');
+
 // --- VARIABLE GLOBAL ---
+let currencySettings = { style: 'currency', currency: 'MXN' },
+  currencyFormatting = new Intl.NumberFormat('es-MX', currencySettings);
+
 let myGraphicsCard;
 
 //Cálculo mensual
-const monthlyData = () => {
+const monthlyData = (LIST) => {
   const monthlyData = new Map();
 
-  dbExpenses.forEach((expense) => {
+  LIST.forEach((expense) => {
     const date = new Date(expense.id); // el id lo establezco a una fecha entendible para humanos
 
     const monthCode = date.toLocaleDateString('es-ES', {
@@ -43,15 +46,15 @@ const dataGraph = (chartData) => {
   return { xAxisMonthLabel, yAxisTotalLabel };
 };
 
-export function graphView() {
+export function graphView(expenses) {
   if (myGraphicsCard) {
     myGraphicsCard.destroy();
     myGraphicsCard = null;
   }
 
-  if (dbExpenses.length === 0) return;
+  if (expenses.length === 0) return;
 
-  const chartData = monthlyData();
+  const chartData = monthlyData(expenses);
 
   const { xAxisMonthLabel, yAxisTotalLabel } = dataGraph(chartData);
 

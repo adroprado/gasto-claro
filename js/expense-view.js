@@ -1,5 +1,3 @@
-import { dbExpenses, currencyFormatting } from './expenses.js';
-
 // --- VARIABLES QUE ALMACENAN ELEMENTOS DEL DOM ---
 const $message = document.querySelector('.success-message'),
   $template = document.querySelector('.template').content,
@@ -32,6 +30,10 @@ const ACTIVATE_SUCCESS_MESSAGE = 'show-success',
   ACTIVATE_GRAPH = 'show-graph',
   ACTIVATE_STATISTICS_MESSAGE = 'statistics-message';
 
+// --- VARIABLE GLOBAL ---
+let currencySettings = { style: 'currency', currency: 'MXN' },
+  currencyFormatting = new Intl.NumberFormat('es-MX', currencySettings);
+
 function successMessageView() {
   $message.classList.toggle(ACTIVATE_SUCCESS_MESSAGE);
   setTimeout(() => {
@@ -39,7 +41,7 @@ function successMessageView() {
   }, 1500);
 }
 
-function expensesView(dataToDisplay = dbExpenses) {
+function expensesView(dataToDisplay) {
   $itemsContainer.innerHTML = '';
   if (dataToDisplay.length === 0) {
     $emptyMessage.classList.remove(ACTIVATE_HIDDEN_MESSAGE);
@@ -73,25 +75,24 @@ function expensesView(dataToDisplay = dbExpenses) {
   }
 }
 
-function editFormView(e) {
+function editFormView(e, expenses) {
   if (e.target.matches(ITEM_BTN_EDIT)) {
     $modalEdit.classList.add(ACTIVATE_SHOW_MODAL);
     const ID = Number(e.target.dataset.id);
+    const expense = expenses.find((item) => item.id === ID);
 
-    dbExpenses.find((expense) => {
-      if (expense.id === ID) {
-        $modalEdit.querySelector(ITEM_MODAL_NAME).value = expense.expenseName;
-        $modalEdit.querySelector(ITEM_MODAL_EXPENSE).value =
-          expense.purchaseAmount;
-        $modalEdit.querySelector(ITEM_MODAL_ID).value = expense.id;
-      }
-    });
+    if (expense) {
+      $modalEdit.querySelector(ITEM_MODAL_NAME).value = expense.expenseName;
+      $modalEdit.querySelector(ITEM_MODAL_EXPENSE).value =
+        expense.purchaseAmount;
+      $modalEdit.querySelector(ITEM_MODAL_ID).value = expense.id;
+    }
   }
 }
 
 // Estadística tarjetas
-function statisticsInfoCardView() {
-  if (dbExpenses.length === 0) {
+function statisticsInfoCardView(expenses) {
+  if (expenses.length === 0) {
     $graph.classList.add(ACTIVATE_GRAPH);
     $graphEmptyState.classList.remove(ACTIVATE_STATISTICS_MESSAGE);
     // Reset tarjeta de información, si, no hay gastos
@@ -103,13 +104,13 @@ function statisticsInfoCardView() {
     $graphEmptyState.classList.add(ACTIVATE_STATISTICS_MESSAGE);
 
     // Cálculo total
-    const totalSum = dbExpenses.reduce((accumulator, expense) => {
+    const totalSum = expenses.reduce((accumulator, expense) => {
       return (accumulator += parseFloat(expense.purchaseAmount));
     }, 0);
     $grandTotalStatistics.textContent = currencyFormatting.format(totalSum);
 
     // Cálculo registros
-    const totalRecords = dbExpenses.length;
+    const totalRecords = expenses.length;
     $totalExpensesStatistics.textContent = totalRecords;
 
     // Cálculo promedio mensual
